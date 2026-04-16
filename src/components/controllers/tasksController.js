@@ -1,50 +1,103 @@
-import { getTasks,addTask,deleteTask,updateTask } from "../services/taskService";
+import { getTasks,addTask,deleteTask,updateTask,getTaskById } from "../services/taskService.js";
 
 export const getResquestBody=(req)=>{
     return new Promise((resolve,reject)=>{
-        const body= ''
+        let body= '';
         
         req.on('data', chunck=>{
-            body.concat(chunck.toString())
+            body+= chunck.toString()
         })
 
         req.on('end', ()=>{
-            resolve(JSON.parse(body))
+            console.log("corpo requisicao", body)
+            try {
+                resolve(body? JSON.parse(body):{})
+                
+            } catch (error) {
+                reject(error)
+            }
         })
+        req.on('error', erro=> reject(erro))
     })
 }
 
 export const createTask= async(req,res)=>{
-    const body = await getResquestBody(req);
-    const task = addTask(body.title)
-    res.statusCode=201
-    res.end(JSON.stringify(task))
+    try {
+        
+        const body = await getResquestBody(req);
+        
+        if (!body.title) {
+            res.statusCode = 400;
+            return res.end(JSON.stringify({ message: "O título é obrigatório" }));
+        }
+        
+        const task = addTask(body.title)
+        res.statusCode=201
+        res.end(JSON.stringify(task))
+    } catch (error) {
+        res.statusCode= 400;
+        res.end(JSON.stringify({message:'Erro no formato da requisicao', error: error.message}))
+    }
 }
+
+
 
 export const listTasks= (req,res)=>{
     const tasks = getTasks();
 
     res.statusCode=200;
+    res.end(JSON.stringify(tasks))
+}
+
+export const listTaskById= (req,res,id)=>{
+    const task = getTaskById(id);
+    if(!task){
+        res.statusCode = 404;
+        return res.end(JSON.stringify({
+            message:'Id de tarefa não existe'
+        }))
+    }
+
+
+    res.statusCode=200;
     res.end(JSON.stringify(task))
 }
 
+
+
 export const updateTasks= async(req,res,id)=>{
-    const body = await getResquestBody(id);
+    const body = await getResquestBody(req);
+    console.log("Corpo requisicao:", body);
 
-    const task = updateTask(id,body.title);
-
+    const {title,completed} = body;
+    
+    if(title && typeof title !== 'string'){
+        res.statusCode = 400;
+        return res.end(JSON.stringify({
+            message:'O título é obrigatório'
+        }))
+    }
+    
+    if(completed!==undefined && typeof completed !== 'boolean'){
+        res.statusCode = 400
+        return res.end(JSON.stringify({message:' O valor de "completed" deve ser booleano'}))
+    }
+    
+    const task = updateTask(id,title,completed);
+    console.log("Tarefa atualizada:", task);
     if(!task){
         res.statusCode=404;
-        return res.send(JSON.stringify({
-            message: 'Não encontrada.'
+        return res.end(JSON.stringify({
+            message: 'Tarefa não encontrada.'
         }));
-        res.send(JSON.stringify(task))
     };
+    res.statusCode = 200;
+    res.end(JSON.stringify(task))
 }
 export const deleteTarefa= (req,res,id)=>{
-    const sucess = deleteTask(id);
+    const success = deleteTask(id);''
 
-    if(!sucess){
+    if(!success){
         res.statusCode = 404;
         return res.end(JSON.stringify({
             message: 'Não encontrada'

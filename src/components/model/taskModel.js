@@ -1,9 +1,7 @@
-const createTask = (id,title)=>{
+export const createTaskModel = (id,title)=>{
     return{
         id,
         title,
         completed:false
     }
 }
-
-module.exports= {createTask}

@@ -1,26 +1,33 @@
-import { createTask } from "../model/taskModel"
+import { createTaskModel } from "../model/taskModel.js";
 
 const tasks = []
 let idCounter=1;
 
 export const addTask=(title)=>{
-    const task = createTask(idCounter++,title)
+    const task = createTaskModel(idCounter++,title)
     tasks.push(task)
     return task
 }
 
 export const getTasks= ()=> tasks
 
-export const updateTask= (id,title,completed)=>{
-    const task= task.find(tarefa=> tarefa.id==id)
+export const getTaskById= (id)=>{
+    const task= tasks.find(tarefa=> tarefa.id==id)
     if(!task) return null;
 
-    if(!completed){
-        task.title=title;
-        return;
-    }
+    return task
+
+}
+
+export const updateTask= (id,title,completed)=>{
+    const task= tasks.find(tarefa=> tarefa.id==id)
+    if(!task) return null;
+    
     task.title=title;
-    task.completed=completed;
+    if(completed !== undefined){
+        task.completed=completed;
+    }
+    return task
 }
 
 export const deleteTask=(id)=>{
