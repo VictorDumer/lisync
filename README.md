@@ -112,7 +112,7 @@ Clone o repositório e instale as dependências:
 
 ```bash
 # 1. Clonar o repositório
-git clone https://github.com/seu-usuario/lisync.git
+git clone https://github.com/victordumer/lisync.git
 
 # 2. Entrar na pasta do projeto
 cd lisync
