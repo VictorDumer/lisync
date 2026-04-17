@@ -21,16 +21,16 @@ export default function ListaTarefas({ tarefas, adicionarTarefa, removerTarefa, 
       <div className="line"></div>
       </div>
       <ul>
-        {tarefas.map((tarefa, indice) => (
-          <div key={`pendentes-${indice}`}>
+        {tarefas.map((tarefa) => (
+          <div key={`pendentes-${tarefa.id}`}>
           <li>
-            {tarefa}
+            {tarefa.title}
             <div className="buttons">
 
-            <button onClick={() => completaTarefa(indice)} className="tarefa">
+            <button onClick={() => completaTarefa(tarefa.id)} className="tarefa">
               <i className="fa-solid fa-check"></i>
             </button>
-            <button onClick={() => removerTarefa(indice, false)} className="tarefa delete">
+            <button onClick={() => removerTarefa(tarefa.id, false)} className="tarefa delete">
               <i class="fa-solid fa-trash"></i>
             </button>
             </div>
@@ -43,11 +43,11 @@ export default function ListaTarefas({ tarefas, adicionarTarefa, removerTarefa, 
         <div className="line"></div>
       </div>
         <ul>
-        {doneTarefas.map((doneTarefas, indice) => (
-          <div key={`concluidas-${indice}`}>
+        {doneTarefas.map((tarefa) => (
+          <div key={`concluidas-${tarefa.id}`}>
           <li className="done">
-            {doneTarefas}
-            <button onClick={() => removerTarefa(indice, true)} className="tarefa delete">
+            {tarefa.title}
+            <button onClick={() => removerTarefa(tarefa.id, true)} className="tarefa delete">
               <i class="fa-solid fa-trash"></i>
             </button>
           </li>

@@ -51,8 +51,8 @@ export const addTask=(title)=>{
 
 export const getTasks= ()=> tasks
 
-export const getTaskById= (id)=>{
-    const task= tasks.find(tarefa=> tarefa.id==id)
+export const    getTaskById= (id)=>{
+    const task= tasks.find(tarefa=> tarefa.id== Number(id))
     if(!task) return null;
 
     return task
@@ -60,10 +60,10 @@ export const getTaskById= (id)=>{
 }
 
 export const updateTask= (id,title,completed)=>{
-    const task= tasks.find(tarefa=> tarefa.id==id)
+    const task= tasks.find(tarefa=> tarefa.id==Number(id))
     if(!task) return null;
     
-    task.title=title;
+    if(title !== undefined) task.title=title;
     if(completed !== undefined){
         task.completed=completed;
     }
@@ -72,7 +72,7 @@ export const updateTask= (id,title,completed)=>{
 }
 
 export const deleteTask=(id)=>{
-    const index = tasks.findIndex(tarefa=>tarefa.id ==id);
+    const index = tasks.findIndex(tarefa=>tarefa.id ==Number(id));
     if(index ===-1) return false
 
     tasks.splice(index,1);
